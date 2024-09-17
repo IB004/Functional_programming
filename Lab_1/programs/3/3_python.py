@@ -1,8 +1,10 @@
+from math import sqrt
+
 def largest_prime_factor(x):
     if is_prime(x):
         return x
     divisor = 2
-    while divisor < x // 2 + 1:
+    while divisor <= sqrt(x):
         if x == divisor:
             return divisor
         if x % divisor == 0:
@@ -19,7 +21,7 @@ def is_prime(x):
     if x < 2:
         return False
     divisor = 2
-    while divisor < x // 2 + 1:
+    while divisor <= sqrt(x):
         if x % divisor == 0:
             return False
         divisor += 1
