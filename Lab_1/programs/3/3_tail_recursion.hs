@@ -17,9 +17,9 @@ isPrime x | x < 2     = False
           | otherwise = not $ hasOtherDivisors_r x 2 where
     hasOtherDivisors_r x divisor | x == divisor            = False
                                  | x `mod` divisor == 0    = True
-                                 | divisor <= getIntSqrt x = hasOtherDivisors_r x (divisor + 1)
+                                 | divisor <= intSqrt x = hasOtherDivisors_r x (divisor + 1)
                                  | otherwise               = False
 
 
-getIntSqrt :: Integer -> Integer
-getIntSqrt = ceiling . sqrt . fromIntegral
+intSqrt :: Integer -> Integer
+intSqrt = ceiling . sqrt . fromIntegral
