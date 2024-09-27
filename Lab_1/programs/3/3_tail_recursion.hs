@@ -14,13 +14,12 @@ getNextPrime x | isPrime $ x + 1 = x + 1
 
 isPrime :: Integer -> Bool
 isPrime x | x < 2     = False
-          | otherwise = not $ haveOtherDivisors x 2
+          | otherwise = not $ hasOtherDivisors_r x 2 where
+    hasOtherDivisors_r x divisor | x == divisor            = False
+                                 | x `mod` divisor == 0    = True
+                                 | divisor <= getIntSqrt x = hasOtherDivisors_r x (divisor + 1)
+                                 | otherwise               = False
 
-haveOtherDivisors :: Integer -> Integer -> Bool
-haveOtherDivisors x divisor | x == divisor         = False
-                            | x `mod` divisor == 0 = True
-                            | divisor <= getSqrt x = haveOtherDivisors x (divisor + 1)
-                            | otherwise            = False
 
-getSqrt :: Integer -> Integer
-getSqrt = ceiling . sqrt . fromIntegral
+getIntSqrt :: Integer -> Integer
+getIntSqrt = ceiling . sqrt . fromIntegral
