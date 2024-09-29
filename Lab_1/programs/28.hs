@@ -1,3 +1,4 @@
+diagSumRecursion :: Integer -> Integer
 diagSumRecursion len = _diagSumRecursion 1 0 (len ^ 2)
   where
     _diagSumRecursion x delta maxX
@@ -6,6 +7,7 @@ diagSumRecursion len = _diagSumRecursion 1 0 (len ^ 2)
       | otherwise = x + _diagSumRecursion (x + delta) delta maxX
 
 
+diagSumTailRecursion :: Integer -> Integer
 diagSumTailRecursion len = _diagSumTailRecursion 1 0 0 (len ^ 2)
   where
     _diagSumTailRecursion x delta acc maxX
@@ -14,15 +16,19 @@ diagSumTailRecursion len = _diagSumTailRecursion 1 0 0 (len ^ 2)
       | otherwise = _diagSumTailRecursion (x + delta) delta (acc + x) maxX
 
 
+diagSumWithSequence :: Integer -> Integer
 diagSumWithSequence len = foldr1 (+) $ filter isOnDiag [1 .. (len ^ 2)]
 
 
+diagSumMap :: Integer -> Integer
 diagSumMap len = sum $ map (\x -> if isOnDiag x then x else 0) [1 .. (len ^ 2)]
 
 
+diagSumInfiniteList :: Int -> Integer
 diagSumInfiniteList len = sum $ map fst $ take ((len `div` 2) * 4 + 1) $ iterate getNextDiag (1, 0)
 
 
+getNextDiag :: (Integer, Integer) -> (Integer, Integer)
 getNextDiag (x, delta)
   | isCorner x = (x + delta + 2, delta + 2)
   | otherwise = (x + delta, delta)
