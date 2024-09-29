@@ -11,7 +11,3 @@ def diag_sum(lenght):
 
 
 print(diag_sum(1001)) #669171001
-
-        
-        
-    
