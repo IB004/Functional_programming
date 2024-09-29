@@ -1,4 +1,4 @@
-def spiral_diag_sum(lenght):
+def diag_sum(lenght):
     dist = 2
     x = 1
     res = 1
@@ -10,7 +10,8 @@ def spiral_diag_sum(lenght):
     return res
 
 
-print(spiral_diag_sum(1001))
+print(diag_sum(1001)) #669171001
+
         
         
     

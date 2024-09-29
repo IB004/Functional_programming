@@ -1,22 +1,27 @@
-diagSum len = diagSum_r 1 0 (len^2) where
-    diagSum_r x delta maxX | x > maxX   = 0
-                           | isCorner x = x + diagSum_r (x + delta + 2) (delta + 2) maxX
-                           | otherwise  = x + diagSum_r (x + delta) delta maxX
+diagSumRecursion len = _diagSumRecursion 1 0 (len^2) where
+    _diagSumRecursion x delta maxX | x > maxX   = 0
+                                   | isCorner x = x + _diagSumRecursion (x + delta + 2) (delta + 2) maxX
+                                   | otherwise  = x + _diagSumRecursion (x + delta) delta maxX
 
 
-diagSumRecursion len = diagSumRecursion_r 1 (len^2) where
-    diagSumRecursion_r x maxX | x > maxX   = 0
-                              | isOnDiag x = x + diagSumRecursion_r (x + 1) maxX
-                              | otherwise  = diagSumRecursion_r (x + 1) maxX
+diagSumTailRecursion len = _diagSumTailRecursion 1 0 0 (len^2) where
+    _diagSumTailRecursion x delta acc maxX | x > maxX   = acc
+                                           | isCorner x = _diagSumTailRecursion (x + delta + 2) (delta + 2) (acc + x) maxX
+                                           | otherwise  = _diagSumTailRecursion (x + delta) delta (acc + x) maxX
 
-diagSumTailRecursion len = diagSumRecursion_r 1 0 (len^2) where
-    diagSumRecursion_r x acc maxX | x > maxX   = acc
-                                  | isOnDiag x = diagSumRecursion_r (x + 1) (acc + x) maxX
-                                  | otherwise  = diagSumRecursion_r (x + 1) acc maxX
 
-diagSumMap len = foldr (+) 0 . map (\x -> if isOnDiag x then x else 0) $ [1..(len^2)]
+diagSumWithSequence len = foldr1 (+) $ filter isOnDiag [1..(len^2)]
 
-diagSumInfiniteList len = foldr (+) 0 . map (\x -> if isOnDiag x then x else 0) $ takeWhile (<=(len^2)) [1..]
+
+diagSumMap len = sum $ map (\x -> if isOnDiag x then x else 0) [1..(len^2)]
+
+
+diagSumInfiniteList len = sum $ map fst $ take ((len `div` 2) * 4 + 1) $ iterate getNextDiag (1, 0) 
+
+
+getNextDiag (x, delta) | isCorner x = (x + delta + 2, delta + 2)
+                       | otherwise  = (x + delta, delta)
+
 
 isOnDiag :: Integer -> Bool
 isOnDiag x | isCorner x = True
@@ -32,7 +37,7 @@ isOnDiag x | isCorner x = True
 
 closesetCorner :: Integer -> Integer
 closesetCorner x | isCorner x = x
-                 | otherwise  = (xCut + 1 + xCut `mod` 2)^2 where
+                 | otherwise  = (xCut + 1 + xCut `mod` 2)^2 where 
                     xCut = floorIntSqrt x
 
 
