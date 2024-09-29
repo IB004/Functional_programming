@@ -1,9 +1,25 @@
+largestPrimeFactorRecursion :: Integer -> Integer
+largestPrimeFactorRecursion x = last $ primeFactors x 2
+
+
+largestPrimeFactorInfiniteList x = last $ filter (\el -> x `mod` el == 0 && isPrime el) [2 .. intSqrt x] 
+
+largestPrimeFactorMap x = maximum $ map (\el -> if x `mod` el == 0 && isPrime el then el else (-1)) [2 .. intSqrt x]
+
+largestPrimeFactorFold x = foldr max (-1) $ map (\el -> if x `mod` el == 0 && isPrime el then el else (-1)) [2 .. intSqrt x]
+
+primeFactors 1 divisor = []
+primeFactors x divisor | x `mod` divisor == 0 = divisor : primeFactors (x `div` divisor) divisor
+                       | otherwise            = primeFactors x (getNextPrime divisor) 
+
 largestPrimeFactor :: Integer -> Integer
 largestPrimeFactor x = primeFactor x 2 where
     primeFactor x divisor 
         | isPrime x            = x
         | x `mod` divisor == 0 = primeFactor (x `div` divisor) divisor
         | otherwise            = primeFactor x (getNextPrime divisor)
+
+
 
 
 
