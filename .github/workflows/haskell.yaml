@@ -1,0 +1,32 @@
+name: haskell
+
+on:
+  push:
+    branches:
+      - main
+    path:
+      - "*.hs"
+      - ".github/workflows/haskell.yaml"
+
+  pull_request:
+    branches:
+      - main
+    path:
+      - "*.hs"
+      - ".github/workflows/haskell.yaml"
+
+
+jobs:
+  hlint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: 'Set up HLint'
+      uses: haskell-actions/hlint-setup@v2
+
+    - name: 'Run HLint'
+      uses: haskell-actions/hlint-run@v2
+      with:
+        path: "*.hs"
+        fail-on: warning
