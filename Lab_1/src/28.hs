@@ -17,7 +17,7 @@ diagSumTailRecursion len = _diagSumTailRecursion 1 0 0 (len ^ 2)
 
 
 diagSumWithSequence :: Integer -> Integer
-diagSumWithSequence len = foldr (+) 0 $ filter isOnDiag [1 .. (len ^ 2)]
+diagSumWithSequence len = sum $ filter isOnDiag [1 .. (len ^ 2)]
 
 
 diagSumMap :: Integer -> Integer
