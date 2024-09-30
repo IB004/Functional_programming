@@ -1,26 +1,32 @@
 largestPrimeFactorRecursion :: Integer -> Integer
-largestPrimeFactorRecursion x = last $ primeFactors x 2
+largestPrimeFactorRecursion x = largestPrimeFactorRecursion_ x 2 where
+    largestPrimeFactorRecursion_ x divisor 
+        | x == 1               = divisor
+        | x `mod` divisor == 0 = max divisor $ largestPrimeFactorRecursion_ (x `div` divisor) divisor
+        | otherwise            = largestPrimeFactorRecursion_ x (getNextPrime divisor)
 
 
-largestPrimeFactorInfiniteList x = last $ filter (\el -> x `mod` el == 0 && isPrime el) [2 .. intSqrt x] 
-
-largestPrimeFactorMap x = maximum $ map (\el -> if x `mod` el == 0 && isPrime el then el else (-1)) [2 .. intSqrt x]
-
-largestPrimeFactorFold x = foldr max (-1) $ map (\el -> if x `mod` el == 0 && isPrime el then el else (-1)) [2 .. intSqrt x]
-
-primeFactors 1 divisor = []
-primeFactors x divisor | x `mod` divisor == 0 = divisor : primeFactors (x `div` divisor) divisor
-                       | otherwise            = primeFactors x (getNextPrime divisor) 
-
-largestPrimeFactor :: Integer -> Integer
-largestPrimeFactor x = primeFactor x 2 where
-    primeFactor x divisor 
-        | isPrime x            = x
-        | x `mod` divisor == 0 = primeFactor (x `div` divisor) divisor
-        | otherwise            = primeFactor x (getNextPrime divisor)
+largestPrimeFactorTailRecursion :: Integer -> Integer
+largestPrimeFactorTailRecursion x = largestPrimeFactorTailRecursion_ x 2 where
+    largestPrimeFactorTailRecursion_ x divisor 
+        | x == 1               = divisor
+        | x `mod` divisor == 0 = largestPrimeFactorTailRecursion_ (x `div` divisor) divisor
+        | otherwise            = largestPrimeFactorTailRecursion_ x (getNextPrime divisor)
 
 
+largestPrimeFactorWithSequence :: Integer -> Integer
+largestPrimeFactorWithSequence x = foldr1 (flip const) $ filter (\el -> x `mod` el == 0 && isPrime el) [2..(ceilIntSqrt x)]
 
+
+largestPrimeFactorMap :: Integer -> Integer
+largestPrimeFactorMap x = maximum $ map (\el -> if x `mod` el == 0 && isPrime el then el else 0) [2 .. ceilIntSqrt x]
+
+
+infiniteList :: Integer -> [(Integer, Integer)]   
+infiniteList x = iterate (\(a, b) -> if b `mod` a == 0 then (a, b `div` a) else (getNextPrime a, b)) (2, x)
+
+largestPrimeFactorInfiniteList :: Integer -> Integer
+largestPrimeFactorInfiniteList x = fst . last $ takeWhile (\(a, b) -> b /= 1) $ infiniteList x
 
 
 getNextPrime :: Integer -> Integer
@@ -33,9 +39,9 @@ isPrime x | x < 2     = False
           | otherwise = not $ hasOtherDivisors_r x 2 where
     hasOtherDivisors_r x divisor | x == divisor            = False
                                  | x `mod` divisor == 0    = True
-                                 | divisor <= intSqrt x = hasOtherDivisors_r x (divisor + 1)
+                                 | divisor <= ceilIntSqrt x = hasOtherDivisors_r x (divisor + 1)
                                  | otherwise               = False
 
 
-intSqrt :: Integer -> Integer
-intSqrt = ceiling . sqrt . fromIntegral
+ceilIntSqrt :: Integer -> Integer
+ceilIntSqrt = ceiling . sqrt . fromIntegral

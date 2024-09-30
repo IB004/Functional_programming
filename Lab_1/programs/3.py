@@ -28,4 +28,4 @@ def is_prime(x):
     return True
 
 x = 600851475143
-print(largest_prime_factor(x))
+print(largest_prime_factor(x)) #6857
