@@ -17,7 +17,7 @@ diagSumTailRecursion len = _diagSumTailRecursion 1 0 0 (len ^ 2)
 
 
 diagSumWithSequence :: Integer -> Integer
-diagSumWithSequence len = foldr1 (+) $ filter isOnDiag [1 .. (len ^ 2)]
+diagSumWithSequence len = foldr (+) 0 $ filter isOnDiag [1 .. (len ^ 2)]
 
 
 diagSumMap :: Integer -> Integer
@@ -55,7 +55,7 @@ closesetCorner x
 
 
 isCorner :: Integer -> Bool
-isCorner x = x `mod` 2 == 1 && x == (floorIntSqrt x) ^ 2
+isCorner x = x `mod` 2 == 1 && x == floorIntSqrt x ^ 2
 
 
 floorIntSqrt :: Integer -> Integer
