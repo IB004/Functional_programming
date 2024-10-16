@@ -1,0 +1,61 @@
+name:                lab-hashmap
+version:             0.1.0.0
+github:              "githubuser/lab-hashmap"
+license:             BSD-3-Clause
+author:              "Ivan Butov"
+maintainer:          "sir.butov2015@yandex.ru"
+copyright:           "2024 Ivan Butov"
+
+extra-source-files:
+- README.md
+- CHANGELOG.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/githubuser/lab-hashmap#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- hashable
+- vector
+
+ghc-options:
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
+
+library:
+  source-dirs: src
+
+executables:
+  lab-hashmap-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - lab-hashmap
+
+tests:
+  lab-hashmap-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - lab-hashmap
