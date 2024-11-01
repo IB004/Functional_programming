@@ -30,10 +30,10 @@ import Data.List (foldl')
 import Data.Vector (Vector, (!), (//))
 import qualified Data.Vector as V
 
+import Dict
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
-
 
 
 
@@ -52,7 +52,21 @@ instance (Hashable k) => Semigroup (HashMap k v) where
 
 
 instance (Hashable k) => Monoid (HashMap k v) where
-    mempty = emptyHashMap 1
+    mempty = emptyHashMap 11
+
+
+instance Dictionary HashMap where
+    emptyD = emptyHashMap 11
+    elementsCountD = elementsCount
+
+    lookupD = lookupH
+    insertD = insertH
+    deleteD = deleteH
+
+    foldrD = foldrH
+    foldlD = foldlH
+    mapD = mapH
+    filterD = filterH
 
 
 
