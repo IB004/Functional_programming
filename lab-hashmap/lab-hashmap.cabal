@@ -25,7 +25,8 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Dict
+      HashMap
   other-modules:
       Paths_lab_hashmap
   autogen-modules:

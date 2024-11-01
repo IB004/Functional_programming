@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Lib
+import HashMap as H
 
 main :: IO ()
-main = someFunc
+main = H.someFunc
