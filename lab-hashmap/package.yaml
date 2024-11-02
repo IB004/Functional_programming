@@ -23,6 +23,8 @@ dependencies:
 - base >= 4.7 && < 5
 - hashable
 - vector
+- tasty
+- tasty-hunit
 
 ghc-options:
 - -Wall
@@ -36,7 +38,7 @@ ghc-options:
 - -Wredundant-constraints
 
 library:
-  source-dirs: src
+  source-dirs:           src
 
 executables:
   lab-hashmap-exe:
@@ -51,7 +53,7 @@ executables:
 
 tests:
   lab-hashmap-test:
-    main:                Spec.hs
+    main:                Tests.hs
     source-dirs:         test
     ghc-options:
     - -threaded

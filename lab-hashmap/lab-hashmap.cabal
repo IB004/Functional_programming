@@ -37,6 +37,8 @@ library
   build-depends:
       base >=4.7 && <5
     , hashable
+    , tasty
+    , tasty-hunit
     , vector
   default-language: Haskell2010
 
@@ -53,13 +55,16 @@ executable lab-hashmap-exe
       base >=4.7 && <5
     , hashable
     , lab-hashmap
+    , tasty
+    , tasty-hunit
     , vector
   default-language: Haskell2010
 
 test-suite lab-hashmap-test
   type: exitcode-stdio-1.0
-  main-is: Spec.hs
+  main-is: Tests.hs
   other-modules:
+      DictionaryUnitTest
       Paths_lab_hashmap
   autogen-modules:
       Paths_lab_hashmap
@@ -70,5 +75,7 @@ test-suite lab-hashmap-test
       base >=4.7 && <5
     , hashable
     , lab-hashmap
+    , tasty
+    , tasty-hunit
     , vector
   default-language: Haskell2010
