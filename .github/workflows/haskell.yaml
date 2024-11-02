@@ -4,14 +4,14 @@ on:
   push:
     branches:
       - main
-    path:
+    paths:
       - "*.hs"
       - ".github/workflows/haskell.yaml"
 
   pull_request:
     branches:
       - main
-    path:
+    paths:
       - "*.hs"
       - ".github/workflows/haskell.yaml"
 
