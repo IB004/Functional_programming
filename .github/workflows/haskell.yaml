@@ -30,3 +30,20 @@ jobs:
       with:
         path: "."
         fail-on: warning
+        
+  lab2_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: 'Setup Haskell with Stack'
+    - uses: actions/setup-haskell@v1.1
+      with:
+        ghc-version: 'latest' 
+        enable-stack: true
+        stack-version: 'latest'
+
+    - name: 'Run lab2 tests'
+      working-directory: ./lab-hashmap
+      run: stack test
+  
