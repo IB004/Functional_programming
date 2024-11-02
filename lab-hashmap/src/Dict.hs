@@ -42,4 +42,3 @@ class Dictionary dict where
         dict2Count = elementsCountD dict2
         filtered1 = filterD (\(k, v) -> containsD k v dict2) dict1 
         filtered1Count = elementsCountD filtered1
-
