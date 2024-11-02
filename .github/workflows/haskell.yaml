@@ -36,8 +36,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: 'Setup Haskell with Stack'
-      uses: actions/setup-haskell@v1.1
+    - name: 'Set up Haskell with Stack'
+      uses: haskell-actions/setup@v2
       with:
         ghc-version: '8.8.3'
         enable-stack: true
