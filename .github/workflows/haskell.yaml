@@ -5,15 +5,15 @@ on:
     branches:
       - main
     paths:
-      - "*.hs"
-      - ".github/workflows/haskell.yaml"
+      - '*.hs'
+      - '.github/workflows/haskell.yaml'
 
   pull_request:
     branches:
       - main
     paths:
-      - "*.hs"
-      - ".github/workflows/haskell.yaml"
+      - '*.hs'
+      - '.github/workflows/haskell.yaml'
 
 
 jobs:
@@ -39,7 +39,6 @@ jobs:
     - name: 'Setup Haskell with Stack'
     - uses: actions/setup-haskell@v1.1
       with:
-        ghc-version: 'latest' 
         enable-stack: true
         stack-version: 'latest'
 
