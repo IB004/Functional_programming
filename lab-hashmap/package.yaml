@@ -25,6 +25,7 @@ dependencies:
 - vector
 - tasty
 - tasty-hunit
+- tasty-quickcheck
 
 ghc-options:
 - -Wall

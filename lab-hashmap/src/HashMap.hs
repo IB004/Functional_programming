@@ -29,6 +29,7 @@ import Data.Hashable (Hashable, hash)
 import Data.List (foldl')
 import Data.Vector (Vector, (!), (//))
 import qualified Data.Vector as V
+import Test.Tasty.QuickCheck (Arbitrary (arbitrary), choose, listOf)
 
 import Dict
 
@@ -67,6 +68,23 @@ instance Dictionary HashMap where
     foldlD = foldlH
     mapD = mapH
     filterD = filterH
+
+{-
+instance (Hashable k, Arbitrary k, Arbitrary v) => Arbitrary (HashMap k v) where
+    arbitrary = do 
+        n <- choose (1, 50 :: Int)
+        bCount <- choose (1, 23)
+        return HashMap { buckets = V.replicate bCount [], elementsCount = 0 }
+        -- hashMap <- iterate (insertH arbitrary arbitrary) empty !! n
+-}
+
+instance (Hashable k, Arbitrary k, Arbitrary v) => Arbitrary (HashMap k v) where
+  arbitrary = do
+    bCount <- choose (1, 23)
+    pairs <- listOf ((,) <$> arbitrary <*> arbitrary)
+    return $ fromList bCount pairs 
+        
+
 
 
 
