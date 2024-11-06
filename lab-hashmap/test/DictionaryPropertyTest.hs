@@ -57,7 +57,7 @@ test5 = testProperty "Filter doesn't increase elemetsCount" test
 
 
 test6 :: TestTree
-test6 = testProperty "Map doesn't change elemetsCount" test 
+test6 = testProperty "Map id test" test 
     where
     test :: HashMap Int Int -> Bool
-    test dict = elementsCountD (mapD (\(a, _) -> (a, a)) dict) == elementsCountD dict
+    test dict = mapD id dict `eqD` dict
