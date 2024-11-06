@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - '*.hs'
+      - '**.hs'
       - '.github/workflows/haskell.yaml'
 
   pull_request:
     branches:
       - main
     paths:
-      - '*.hs'
+      - '**.hs'
       - '.github/workflows/haskell.yaml'
 
 
