@@ -69,14 +69,6 @@ instance Dictionary HashMap where
     mapD = mapH
     filterD = filterH
 
-{-
-instance (Hashable k, Arbitrary k, Arbitrary v) => Arbitrary (HashMap k v) where
-    arbitrary = do 
-        n <- choose (1, 50 :: Int)
-        bCount <- choose (1, 23)
-        return HashMap { buckets = V.replicate bCount [], elementsCount = 0 }
-        -- hashMap <- iterate (insertH arbitrary arbitrary) empty !! n
--}
 
 instance (Hashable k, Arbitrary k, Arbitrary v) => Arbitrary (HashMap k v) where
   arbitrary = do
