@@ -2,31 +2,20 @@ module Lib where
 
 import Text.Read(readMaybe)
 import Control.Monad (unless)
-
-data Window a = Window [a] deriving (Show, Eq)
-
-emptyWindow = Window []
-
-addLeft x (Window win)  = Window $ x : win
-
-readToWindow wind = do 
-    putStrLn $ show wind
-    input <- readDot
-    unless (input == "exit") $ do
-        let xy = extractNumbers input
-        readToWindow $ addLeft xy wind
+import Window
 
 someFunc :: IO ()
 someFunc = putStrLn "Hello!"
 
-readNumbers :: IO [Float]
-readNumbers = do
-      n <- getLine
-      case (n, readMaybe n :: Maybe Float) of
-        ("end", _) -> return []
-        (_, Just n) -> (n:) <$> readNumbers
-        (_, Nothing) -> readNumbers
+readToWindow :: Window (Float, Float) -> IO ()
+readToWindow wind = do 
+    putStrLn $ show wind
+    input <- readDot
+    unless (isEnd input) $ do
+        let xy = extractNumbers input
+        readToWindow $ addLeft xy wind
 
+readDot :: IO String
 readDot = do
     putStr "Enter x y: "
     xy <- getLine
@@ -48,6 +37,10 @@ hw = do
         else putStrLn $ "Hello, " ++ name ++ "!"
 
 
-putStr' :: String -> IO ()
-putStr' "" = return ()
-putStr' (c:cs) = putChar c >> putStr' cs
+isEnd :: String -> Bool
+isEnd "exit" = True 
+isEnd "e" = True 
+isEnd "end" = True 
+isEnd "quit" = True 
+isEnd "q" = True 
+isEnd _ = False 
