@@ -3,9 +3,19 @@ module Lib where
 import Text.Read(readMaybe)
 import Control.Monad (unless)
 import Window
+import Interpolation
 
 someFunc :: IO ()
 someFunc = putStrLn "Hello!"
+
+mainLoop interp = do 
+    input <- readDot
+    unless (isEnd input) $ do
+        let step = 1
+        let xy = extractNumbers input
+        let (res, interp') = process step interp xy
+        putStr $ showRes (name interp) res
+        mainLoop interp'
 
 readToWindow :: Window (Float, Float) -> IO ()
 readToWindow wind = do 
@@ -44,3 +54,8 @@ isEnd "end" = True
 isEnd "quit" = True 
 isEnd "q" = True 
 isEnd _ = False 
+
+
+showRes :: String -> [(Float, Float)] -> String
+showRes _ [] = ""
+showRes name xy = name ++ ":\n" ++ (show xy) ++ "\n"

@@ -25,7 +25,9 @@ source-repository head
 
 library
   exposed-modules:
+      Interpolation
       Lib
+      Window
   other-modules:
       Paths_lab_interpolation
   autogen-modules:
