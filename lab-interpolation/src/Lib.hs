@@ -4,48 +4,54 @@ import Text.Read(readMaybe)
 import Control.Monad (unless)
 import Window
 import Interpolation
+import System.IO
+import Data.Maybe (isJust)
 
 someFunc :: IO ()
-someFunc = putStrLn "Hello!"
+someFunc = mainLoop [linearInetrpolation]
 
-mainLoop interp = do 
-    input <- readDot
+readStdin = do 
+    input' <- getLine
+    let input = cutBom input'
+    unless (input == "end") $ do
+        putStrLn input 
+        hFlush stdout 
+        readStdin 
+
+mainLoop interps = do 
+    input <- readPoint
     unless (isEnd input) $ do
-        let step = 1
-        let xy = extractNumbers input
-        let (res, interp') = process step interp xy
-        putStr $ showRes (name interp) res
-        mainLoop interp'
+        if (isValid $ words input)
+        then do 
+            let step = 1
+            let xy = extractNumbers input
+            let results = map (\i -> process step i xy) interps
+            mapM_ (\(res, int) -> putStr $ showRes (getName int) res) results
+            mainLoop (snd $ unzip results)
+        else do 
+            putStrLn "Please, enter float x and float y"
+            mainLoop interps
 
-readToWindow :: Window (Float, Float) -> IO ()
-readToWindow wind = do 
-    putStrLn $ show wind
-    input <- readDot
-    unless (isEnd input) $ do
-        let xy = extractNumbers input
-        readToWindow $ addLeft xy wind
 
-readDot :: IO String
-readDot = do
+
+isValid :: [String] -> Bool
+isValid [x,y] = isJust (readMaybe x :: Maybe Float) && isJust (readMaybe y :: Maybe Float)
+isValid _ = False
+
+
+readPoint :: IO String
+readPoint = do
     putStr "Enter x y: "
+    hFlush stdout
     xy <- getLine
-    return xy
+    return $ cutBom xy
 
-extractNumbers :: String -> (Float, Float)
+extractNumbers :: String -> Point
 extractNumbers xy = (read x, read y)
     where 
     lst = words xy
     x = head lst
     y = head $ tail lst
-
-hw :: IO ()
-hw = do
-    putStrLn "What is your name?"
-    name <- getLine
-    if name == "" 
-        then hw
-        else putStrLn $ "Hello, " ++ name ++ "!"
-
 
 isEnd :: String -> Bool
 isEnd "exit" = True 
@@ -55,7 +61,16 @@ isEnd "quit" = True
 isEnd "q" = True 
 isEnd _ = False 
 
-
-showRes :: String -> [(Float, Float)] -> String
+showRes :: String -> [Point] -> String
 showRes _ [] = ""
-showRes name xy = name ++ ":\n" ++ (show xy) ++ "\n"
+showRes header points = "\n" ++ (showHeader header) ++ (concat $ map showPoint points) ++ "\n"
+
+showHeader :: String -> String
+showHeader header = header ++ ":\n"
+
+showPoint :: Point -> String
+showPoint (x, y) = show x ++ "  " ++ show y ++ "\n"
+
+cutBom :: String -> String
+cutBom ('\xfeff':str) = str 
+cutBom str = str 

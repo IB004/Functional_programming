@@ -1,9 +1,9 @@
 module Window where
 
 data Window a = Window {
-    capacity :: Int,
-    size :: Int,
-    dots :: [a]
+    getCapacity :: Int,
+    getSize :: Int,
+    getPoints :: [a]
 } deriving (Show, Eq)
 
 emptyWindow :: Int -> Window a
