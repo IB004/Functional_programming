@@ -26,7 +26,9 @@ source-repository head
 library
   exposed-modules:
       Interpolation
+      LagrangeInterpolation
       Lib
+      LinearInterpolation
       Window
   other-modules:
       Paths_lab_interpolation

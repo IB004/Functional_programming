@@ -1,4 +1,8 @@
-module Window where
+module Window (
+    Window (..), 
+    emptyWindow,
+    addLeft
+) where
 
 data Window a = Window {
     getCapacity :: Int,
