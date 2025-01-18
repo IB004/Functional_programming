@@ -6,9 +6,10 @@ import Window
 import Interpolation
 import System.IO
 import Data.Maybe (isJust)
+import Text.Printf (printf)
 
 someFunc :: IO ()
-someFunc = mainLoop [linearInetrpolation]
+someFunc = mainLoop [linearInetrpolation, lagrangeInetrpolation]
 
 readStdin = do 
     input' <- getLine
@@ -69,7 +70,7 @@ showHeader :: String -> String
 showHeader header = header ++ ":\n"
 
 showPoint :: Point -> String
-showPoint (x, y) = show x ++ "  " ++ show y ++ "\n"
+showPoint (x, y) = (printf "%.2f" x) ++ "  " ++ (printf "%.2f" y) ++ "\n"
 
 cutBom :: String -> String
 cutBom ('\xfeff':str) = str 
