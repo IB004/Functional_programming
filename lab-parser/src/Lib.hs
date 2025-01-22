@@ -4,7 +4,7 @@ module Lib
 
 import Data.Char
 import Data.Either
-import Control.Applicative
+import Control.Applicative hiding (many)
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
@@ -27,6 +27,18 @@ jsonBool = strToJsonBool <$> (string "true" <|> string "false")
     strToJsonBool "true" = JsonBool True
     strToJsonBool "false" = JsonBool False
     strToJsonBool _ = undefined
+
+jsonNumber :: Parser JsonValue
+jsonNumber = lstToInt <$> number 
+    where
+    lstToInt nms = JsonNumber $ read $ map intToDigit nms
+
+stringLiteral :: Parser [Char]
+stringLiteral = many $ satisfy (/= '"')
+
+-- mo escape support
+jsonString :: Parser JsonValue
+jsonString =  (\str -> JsonString str) <$> (char '"' *> stringLiteral <* char '"')
 
 newtype Parser a = Parser { runParser :: String -> Either String (a, String) }
 
@@ -71,3 +83,8 @@ digit = digitToInt <$> satisfy isDigit
 string :: String -> Parser String
 string str = sequenceA $ map char str 
 
+many p = (:) <$> p <*> many p <|> pure []
+
+many1 p = (:) <$> p <*> (many p <|> pure [])
+
+number = many1 digit 
