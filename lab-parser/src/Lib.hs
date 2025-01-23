@@ -4,7 +4,7 @@ module Lib
 
 import Data.Char
 import Data.Either
-import Control.Applicative hiding (many)
+import Control.Applicative
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
@@ -17,6 +17,8 @@ data JsonValue = JsonNull
                | JsonArray [JsonValue]
                | JsonObject [(String, JsonValue)]
                deriving (Show, Eq)
+
+jsonValue = jsonNull <|> jsonBool <|> jsonNumber <|> jsonString <|> jsonArray <|> jsonObject
 
 jsonNull :: Parser JsonValue
 jsonNull = (\_ -> JsonNull) <$> string "null"
@@ -34,11 +36,27 @@ jsonNumber = lstToInt <$> number
     lstToInt nms = JsonNumber $ read $ map intToDigit nms
 
 stringLiteral :: Parser [Char]
-stringLiteral = many $ satisfy (/= '"')
+stringLiteral = char '"' *> (many $ satisfy (/= '"')) <* char '"'
 
--- mo escape support
+-- no escape support
 jsonString :: Parser JsonValue
-jsonString =  (\str -> JsonString str) <$> (char '"' *> stringLiteral <* char '"')
+jsonString =  JsonString <$> stringLiteral
+
+jsonArray :: Parser JsonValue
+jsonArray = JsonArray <$> (char '[' *> ws *> elements <* ws <* char ']')
+    where
+    sep = ws *> char ',' <* ws
+    elements = jsonValue `sepBy` sep
+
+jsonObject :: Parser JsonValue
+jsonObject = JsonObject <$> (char '{' *> ws *> elements <* ws <* char '}')
+    where
+    sep = ws *> char ',' <* ws
+    pair = (\key _ value -> (key, value)) <$> stringLiteral <*> (ws *> char ':' <* ws) <*> jsonValue
+    elements = pair `sepBy` sep
+
+
+
 
 newtype Parser a = Parser { runParser :: String -> Either String (a, String) }
 
@@ -80,11 +98,13 @@ char c = satisfy (== c)
 digit :: Parser Int
 digit = digitToInt <$> satisfy isDigit
 
+ws :: Parser String
+ws = many (satisfy isSpace)
+
 string :: String -> Parser String
 string str = sequenceA $ map char str 
 
-many p = (:) <$> p <*> many p <|> pure []
+sepBy :: Parser e -> Parser s -> Parser [e] 
+sepBy element sep = ((:) <$> element <*> many (sep *> element)) <|> pure []
 
-many1 p = (:) <$> p <*> (many p <|> pure [])
-
-number = many1 digit 
+number = some digit 
