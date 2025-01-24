@@ -18,7 +18,13 @@ data JsonValue = JsonNull
                | JsonObject [(String, JsonValue)]
                deriving (Show, Eq)
 
-jsonValue = jsonNull <|> jsonBool <|> jsonNumber <|> jsonString <|> jsonArray <|> jsonObject
+jsonValue :: Parser JsonValue
+jsonValue =     jsonNull 
+            <|> jsonBool 
+            <|> jsonNumber 
+            <|> jsonString 
+            <|> jsonArray 
+            <|> jsonObject
 
 jsonNull :: Parser JsonValue
 jsonNull = (\_ -> JsonNull) <$> string "null"
@@ -89,11 +95,18 @@ satisfy :: (Char -> Bool) -> Parser Char
 satisfy pr = Parser fun where
     fun "" = Left "unexpected end of input"
     fun (x:xs) | pr x = Right (x, xs)
-               | otherwise = Left $ "unexpected " ++ [x]
+               | otherwise = Left $ "unexpected '" ++ [x] ++ "'"
         
 
+char_ :: Char -> Parser Char
+char_ c = satisfy (== c)
+
 char :: Char -> Parser Char
-char c = satisfy (== c)
+char c = Parser $ \inp ->
+    case (runParser (char_ c) inp) of 
+        (Left err) -> Left (err ++ ", expected '" ++ [c] ++ "'" ++ context inp )
+        result -> result 
+
 
 digit :: Parser Int
 digit = digitToInt <$> satisfy isDigit
@@ -101,10 +114,20 @@ digit = digitToInt <$> satisfy isDigit
 ws :: Parser String
 ws = many (satisfy isSpace)
 
+string_ :: String -> Parser String
+string_ str = sequenceA $ map char str 
+
 string :: String -> Parser String
-string str = sequenceA $ map char str 
+string str = Parser $ \inp ->
+    case (runParser (string_ str) inp) of 
+        (Left _) -> Left ("expected " ++ str ++ context inp )
+        result -> result 
 
 sepBy :: Parser e -> Parser s -> Parser [e] 
 sepBy element sep = ((:) <$> element <*> many (sep *> element)) <|> pure []
 
+number :: Parser [Int]
 number = some digit 
+
+context :: String -> String
+context inp = " in " ++ take 10 inp
