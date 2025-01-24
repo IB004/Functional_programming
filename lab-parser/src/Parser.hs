@@ -53,14 +53,13 @@ char :: Char -> Parser Char
 char c = Parser $ \inp ->
     case (runParser (char_ c) inp) of 
         (Left err) -> Left (err ++ ", expected '" ++ [c] ++ "'" ++ context inp )
-        result -> result 
-
+        result -> result
 
 digit :: Parser Int
 digit = digitToInt <$> satisfy isDigit
 
 ws :: Parser String
-ws = many (satisfy isSpace)
+ws = many (satisfy (\c -> isSpace c || c == '\xfeff'))
 
 string_ :: String -> Parser String
 string_ str = sequenceA $ map char str 
@@ -78,4 +77,4 @@ number :: Parser [Int]
 number = some digit 
 
 context :: String -> String
-context inp = " in " ++ take 10 inp
+context inp = ": " ++ take 20 inp

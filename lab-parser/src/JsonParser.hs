@@ -1,5 +1,6 @@
 module JsonParser (
     JsonValue(..),
+    json,
     jsonValue,
     jsonNull,
     jsonBool,
@@ -21,6 +22,8 @@ data JsonValue = JsonNull
                | JsonArray [JsonValue]
                | JsonObject [(String, JsonValue)]
                deriving (Show, Eq)
+
+json = ws *> jsonValue <* ws
 
 jsonValue :: Parser JsonValue
 jsonValue =     jsonNull 
@@ -45,8 +48,18 @@ jsonNumber = lstToInt <$> number
     where
     lstToInt nms = JsonNumber $ read $ map intToDigit nms
 
+simpleChar_ :: Parser Char
+simpleChar_ = satisfy ((&&) <$> (/= '"') <*> (/= '\\'))
+
+escapedChar_ :: Parser Char 
+escapedChar_ =  ('"' <$ string "\\\"") 
+            <|> ('\\' <$ string "\\\\")
+            <|> ('\n' <$ string "\\n") 
+            <|> ('\r' <$ string "\\r") 
+            <|> ('\t' <$ string "\\t") 
+
 stringLiteral :: Parser [Char]
-stringLiteral = char '"' *> (many $ satisfy (/= '"')) <* char '"'
+stringLiteral = char '"' *>  many (simpleChar_ <|> escapedChar_) <* char '"'
 
 jsonString :: Parser JsonValue
 jsonString =  JsonString <$> stringLiteral
