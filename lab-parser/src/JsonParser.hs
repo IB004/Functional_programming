@@ -17,7 +17,7 @@ import Control.Applicative
 
 data JsonValue = JsonNull
                | JsonBool Bool 
-               | JsonNumber Integer -- todo: double
+               | JsonNumber Double
                | JsonString String 
                | JsonArray [JsonValue]
                | JsonObject [(String, JsonValue)]
@@ -43,10 +43,29 @@ jsonBool = strToJsonBool <$> (string "true" <|> string "false")
     strToJsonBool "false" = JsonBool False
     strToJsonBool _ = undefined
 
+formDouble_ :: Integer  -- sign
+            -> Integer  -- integral part
+            -> Double   -- decimal part
+            -> Integer  -- exponent
+            -> Double
+formDouble_ sign int dec expo =
+    fromIntegral sign * (fromIntegral int + dec) * (10 ^^ expo)
+
+doubleLiteral :: Parser Double
+doubleLiteral =
+  formDouble_
+    <$> (sign <|> pure 1)
+    <*> (read <$> number)
+    <*> ((read <$> decimal) <|> pure 0)
+    <*> ((e *> ((*) <$> (sign <|> pure 1) <*> (read <$> number))) <|> pure 0)
+  where
+    delimiter = char '.'
+    decimal = ('0':) <$> ((:) <$> delimiter <*> number)
+    sign = ((-1) <$ char '-') <|> (1 <$ char '+')
+    e = char 'e' <|> char 'E'
+
 jsonNumber :: Parser JsonValue
-jsonNumber = lstToInt <$> number 
-    where
-    lstToInt nms = JsonNumber $ read $ map intToDigit nms
+jsonNumber = JsonNumber <$> doubleLiteral
 
 simpleChar_ :: Parser Char
 simpleChar_ = satisfy ((&&) <$> (/= '"') <*> (/= '\\'))

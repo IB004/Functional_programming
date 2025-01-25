@@ -55,8 +55,8 @@ char c = Parser $ \inp ->
         (Left err) -> Left (err ++ ", expected '" ++ [c] ++ "'" ++ context inp )
         result -> result
 
-digit :: Parser Int
-digit = digitToInt <$> satisfy isDigit
+digit :: Parser Char
+digit = satisfy isDigit
 
 ws :: Parser String
 ws = many (satisfy (\c -> isSpace c || c == '\xfeff'))
@@ -73,7 +73,7 @@ string str = Parser $ \inp ->
 sepBy :: Parser e -> Parser s -> Parser [e] 
 sepBy element sep = ((:) <$> element <*> many (sep *> element)) <|> pure []
 
-number :: Parser [Int]
+number :: Parser String
 number = some digit 
 
 context :: String -> String

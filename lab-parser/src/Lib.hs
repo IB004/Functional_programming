@@ -8,7 +8,7 @@ import System.IO
 
 mainLoop :: IO ()
 mainLoop = do 
-    inp <- readStdin
+    inp <- getContents
     putStrLn inp
     case (runParser json inp) of
         (Right (ast, rest)) -> putStrLn $ show ast
