@@ -20,7 +20,16 @@ data JsonValue = JsonNull
                | JsonString String 
                | JsonArray [JsonValue]
                | JsonObject [(String, JsonValue)]
-               deriving (Show, Eq)
+               deriving (Eq)
+
+instance Show JsonValue where
+  show JsonNull = "null"
+  show (JsonBool value) = show value
+  show (JsonNumber value) = show value
+  show (JsonString value) = show value
+  show (JsonArray values) = show values
+  show (JsonObject fields) = "{\n" ++ (concat $ map (\(f, v) -> "  " ++ f ++ ": " ++ show v ++ ",\n") fields) ++ "}"
+
 
 json :: Parser JsonValue
 json = ws *> jsonValue <* ws

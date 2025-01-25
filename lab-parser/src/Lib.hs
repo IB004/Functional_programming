@@ -16,14 +16,15 @@ mainFunc = do
 
 showInput :: String -> IO ()  
 showInput inp = do
-    putStr "Get input: "
+    putStr "GET INPUT: "
     putStrLn inp
     hFlush stdout 
 
 showResult :: Show a => (a, String) -> IO ()
 showResult (ast, rest) = do 
+    putStrLn "RESULT: "
     putStrLn $ show ast
-    putStrLn "Rest input: "
+    putStrLn "REST: "
     putStrLn rest
     hFlush stdout 
 
