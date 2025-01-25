@@ -12,7 +12,6 @@ module JsonParser (
 ) where
 
 import Parser
-import Data.Char
 import Control.Applicative
 
 data JsonValue = JsonNull
@@ -23,6 +22,7 @@ data JsonValue = JsonNull
                | JsonObject [(String, JsonValue)]
                deriving (Show, Eq)
 
+json :: Parser JsonValue
 json = ws *> jsonValue <* ws
 
 jsonValue :: Parser JsonValue

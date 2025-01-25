@@ -1,31 +1,36 @@
 module Lib ( 
-    mainLoop
+    mainFunc
 ) where
 
 import Parser
 import JsonParser
 import System.IO
 
-mainLoop :: IO ()
-mainLoop = do 
-    inp <- getContents
-    putStrLn inp
+mainFunc :: IO ()
+mainFunc = do 
+    inp <- readStdin
+    showInput inp
     case (runParser json inp) of
-        (Right (ast, rest)) -> putStrLn $ show ast
-        (Left err) -> putStrLn err
+        (Right (ast, rest)) -> showResult (ast, rest)
+        (Left err) -> showError err
+
+showInput :: String -> IO ()  
+showInput inp = do
+    putStr "Get input: "
+    putStrLn inp
     hFlush stdout 
 
-myLoop = do 
-    done <- isEOF
-    if done
-      then do 
-        putStrLn "Bye!"
-        hFlush stdout   
-      else do 
-        inp <- getLine
-        putStrLn inp
-        hFlush stdout 
-        myLoop
+showResult :: Show a => (a, String) -> IO ()
+showResult (ast, rest) = do 
+    putStrLn $ show ast
+    putStrLn "Rest input: "
+    putStrLn rest
+    hFlush stdout 
+
+showError :: String -> IO ()
+showError err = do 
+    putStrLn err
+    hFlush stdout 
 
 readStdin :: IO String
 readStdin = readStdin_ ""
