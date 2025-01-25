@@ -28,7 +28,7 @@ instance Show JsonValue where
   show (JsonNumber value) = show value
   show (JsonString value) = show value
   show (JsonArray values) = show values
-  show (JsonObject fields) = "{\n" ++ (concat $ map (\(f, v) -> "  " ++ f ++ ": " ++ show v ++ ",\n") fields) ++ "}"
+  show (JsonObject fields) = "{\n" ++ (concatMap (\(f, v) -> "  " ++ f ++ ": " ++ show v ++ ",\n") fields) ++ "}"
 
 
 json :: Parser JsonValue
@@ -43,7 +43,7 @@ jsonValue =     jsonNull
             <|> jsonObject
 
 jsonNull :: Parser JsonValue
-jsonNull = (\_ -> JsonNull) <$> string "null"
+jsonNull = JsonNull <$ string "null"
 
 jsonBool :: Parser JsonValue
 jsonBool = strToJsonBool <$> (string "true" <|> string "false")

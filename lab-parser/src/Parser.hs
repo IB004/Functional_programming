@@ -62,7 +62,7 @@ ws :: Parser String
 ws = many (satisfy (\c -> isSpace c || c == '\xfeff'))
 
 string_ :: String -> Parser String
-string_ str = sequenceA $ map char str 
+string_ = traverse char 
 
 string :: String -> Parser String
 string str = Parser $ \inp ->

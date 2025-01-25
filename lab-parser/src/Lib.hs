@@ -23,7 +23,7 @@ showInput inp = do
 showResult :: Show a => (a, String) -> IO ()
 showResult (ast, rest) = do 
     putStrLn "RESULT: "
-    putStrLn $ show ast
+    print ast
     putStrLn "REST: "
     putStrLn rest
     hFlush stdout 
